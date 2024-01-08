@@ -1,9 +1,11 @@
 package com.slimdevs.accounts.constants;
 
-public abstract class AccountConstants {
-    //Se puede utilizar un empty constructor private también para limitar la instanciación de esta clase.
+public class AccountConstants {
 
-    
+    private AccountConstants() {
+        //Se utiliza un private empty constructor para limitar la instanciación de esta clase.
+    }
+
     public static final String  SAVINGS = "Savings";
     public static final String  ADDRESS = "123 Main Street, New York";
     public static final String  STATUS_201 = "201";
