@@ -8,6 +8,7 @@ spring:
         password: ''
     h2:
         console:
+            path: /h2
             enabled: true
     jpa:
         hibernate:
