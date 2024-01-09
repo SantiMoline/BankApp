@@ -7,10 +7,13 @@ import java.util.Random;
 import org.springframework.stereotype.Service;
 
 import com.slimdevs.accounts.constants.AccountConstants;
+import com.slimdevs.accounts.dto.AccountDto;
 import com.slimdevs.accounts.dto.CustomerDto;
 import com.slimdevs.accounts.entity.Account;
 import com.slimdevs.accounts.entity.Customer;
 import com.slimdevs.accounts.exception.CustomerAlreadyExistsException;
+import com.slimdevs.accounts.exception.ResourceNotFoundException;
+import com.slimdevs.accounts.mapper.AccountMapper;
 import com.slimdevs.accounts.mapper.CustomerMapper;
 import com.slimdevs.accounts.repository.AccountRepository;
 import com.slimdevs.accounts.repository.CustomerRepository;
@@ -40,7 +43,27 @@ public class AccountServiceImpl implements IAccountService {
         accountRepository.save(createNewAccount(savedCustomer));
 
     }
+
     
+    
+    @Override
+    public CustomerDto fetchAccount(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+            ()-> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
+        );
+
+        Account account = accountRepository.findByCustomerId(customer.getCustomerId()).orElseThrow(
+            ()-> new ResourceNotFoundException("Account", "customerId", customer.getCustomerId().toString())
+        );
+
+        CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+        customerDto.setAccountDto(AccountMapper.mapToAccountDto(account, new AccountDto()));
+
+        return customerDto; 
+    }
+
+
+
     /**
      * Receives a customer and generates them a new account. Inside contains the logic to assign a new AccountNumber.
      * @param customer - Customer Object
