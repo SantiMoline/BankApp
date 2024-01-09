@@ -62,7 +62,31 @@ public class AccountServiceImpl implements IAccountService {
         return customerDto; 
     }
 
+    
 
+
+    @Override
+    public boolean updateAccount(CustomerDto customerDto) {
+        boolean isUpdated = false;
+        AccountDto accountDto = customerDto.getAccountDto();
+        if (accountDto != null) {
+            Account account = accountRepository.findById(accountDto.getAccountNumber()).orElseThrow(
+                ()-> new ResourceNotFoundException("Account", "accountNumber", accountDto.getAccountNumber().toString())
+            );
+        
+            AccountMapper.mapToAccount(accountDto, account);
+            account = accountRepository.save(account);
+
+            Long customerId = account.getCustomerId();
+            Customer customer = customerRepository.findById(customerId).orElseThrow(
+                ()-> new ResourceNotFoundException("Customer", "id", customerId.toString())
+            );
+            CustomerMapper.mapToCustomer(customerDto, customer);
+            customerRepository.save(customer);
+            isUpdated = true;
+        }
+        return isUpdated;
+    }
 
     /**
      * Receives a customer and generates them a new account. Inside contains the logic to assign a new AccountNumber.
