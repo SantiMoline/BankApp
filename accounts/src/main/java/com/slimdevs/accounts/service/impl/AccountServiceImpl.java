@@ -45,7 +45,6 @@ public class AccountServiceImpl implements IAccountService {
     }
 
     
-    
     @Override
     public CustomerDto fetchAccount(String mobileNumber) {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
@@ -61,8 +60,6 @@ public class AccountServiceImpl implements IAccountService {
 
         return customerDto; 
     }
-
-    
 
 
     @Override
@@ -87,6 +84,20 @@ public class AccountServiceImpl implements IAccountService {
         }
         return isUpdated;
     }
+
+    
+    
+
+    @Override
+    public boolean deleteAccount(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+            () -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber) 
+        );
+        accountRepository.deleteByCustomerId(customer.getCustomerId());
+        customerRepository.deleteById(customer.getCustomerId());
+        return true;
+    }
+
 
     /**
      * Receives a customer and generates them a new account. Inside contains the logic to assign a new AccountNumber.
