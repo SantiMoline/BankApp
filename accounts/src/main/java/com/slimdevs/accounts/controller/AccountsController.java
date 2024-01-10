@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.slimdevs.accounts.constants.AccountConstants;
 import com.slimdevs.accounts.dto.CustomerDto;
-import com.slimdevs.accounts.dto.ErrorResponseDto;
 import com.slimdevs.accounts.dto.ResponseDto;
 import com.slimdevs.accounts.service.IAccountService;
 
