@@ -1,6 +1,5 @@
 package com.slimdevs.accounts.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -36,8 +35,6 @@ public class AccountServiceImpl implements IAccountService {
         if(optionalCustomer.isPresent())
             throw new CustomerAlreadyExistsException("Customer already registered with given phone number" + customerDto.getMobileNumber());
     
-        customer.setCreatedAt(LocalDateTime.now());
-        customer.setCreatedBy("Anonymous");
         //Como al guardar el customer en la BD se le asignará un ID, acá tenemos que guardar el objeto que retorna el método Save para conocer ese Id.
         Customer savedCustomer = customerRepository.save(customer);
         accountRepository.save(createNewAccount(savedCustomer));
@@ -114,8 +111,6 @@ public class AccountServiceImpl implements IAccountService {
         newAccount.setAccountNumber(randomAccNumber);
         newAccount.setAccountType(AccountConstants.SAVINGS);
         newAccount.setBranchAddress(AccountConstants.ADDRESS);
-        newAccount.setCreatedAt(LocalDateTime.now());
-        newAccount.setCreatedBy("Anonymous");
 
         return newAccount;
     }
