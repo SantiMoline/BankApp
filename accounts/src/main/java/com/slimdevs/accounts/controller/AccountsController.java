@@ -15,13 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.slimdevs.accounts.constants.AccountConstants;
 import com.slimdevs.accounts.dto.CustomerDto;
+import com.slimdevs.accounts.dto.ErrorResponseDto;
 import com.slimdevs.accounts.dto.ResponseDto;
 import com.slimdevs.accounts.service.IAccountService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 
+@Tag(name = "CRUD REST APIs for Accounts in BankApp.",
+    description = "Create, update, fetch and delete account details.")
 @RestController
 @RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
@@ -30,6 +39,9 @@ public class AccountsController {
     
     IAccountService iAccountService;
 
+    @Operation(summary = "Create account REST API",
+        description = "Creates new customer & new account in BankApp.")
+    @ApiResponse(responseCode = "201", description = AccountConstants.MESSAGE_201)
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
         iAccountService.createAccount(customerDto);
@@ -38,6 +50,9 @@ public class AccountsController {
             .body(new ResponseDto(AccountConstants.STATUS_201, AccountConstants.MESSAGE_201));
     }
 
+    @Operation(summary = "Fetch account's details REST API",
+        description = "Fetches customer & account's details based on mobile number.")
+    @ApiResponse(responseCode = "200", description = AccountConstants.MESSAGE_200)
     @GetMapping("/fetch")
     public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam
                                         @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must have 10 digits.") 
@@ -48,6 +63,21 @@ public class AccountsController {
             .body(customerDto);
     }
 
+    @Operation(summary = "Updated account's details REST API",
+        description = "Updates customer & account's details based on an account number.")
+    @ApiResponses({
+        @ApiResponse(
+                responseCode = "200",
+                description = AccountConstants.MESSAGE_200
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = AccountConstants.MESSAGE_500,
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+        )
+    })
     @PutMapping("/update")
     public ResponseEntity<ResponseDto> updateAccountDetails(@Valid @RequestBody CustomerDto customerDto) {
         boolean isUpdated = iAccountService.updateAccount(customerDto);
@@ -62,6 +92,12 @@ public class AccountsController {
         }
     }
 
+    @Operation(summary = "Delete customer & account's details REST API",
+        description = "Deletes customer & account's details based on a mobile number.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = AccountConstants.MESSAGE_200),
+        @ApiResponse(responseCode = "500", description = AccountConstants.MESSAGE_500)
+    })
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteAccountDetails(@RequestParam 
                                         @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must have 10 digits.")
