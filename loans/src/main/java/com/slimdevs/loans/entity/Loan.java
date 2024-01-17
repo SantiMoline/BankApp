@@ -10,7 +10,7 @@ public class Loan extends BaseEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int loadId;
+    private int loanId;
 
     private String mobileNumber;
 
