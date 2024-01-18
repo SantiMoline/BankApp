@@ -8,9 +8,10 @@ spring:
         password: ''
     h2:
         console:
+            path: /h2
             enabled: true
     jpa:
-        database-platform: org.hibernate.dialect.H2Dialect
         hibernate:
             ddl-auto: update
+        open-in-view: true
         show-sql: true
