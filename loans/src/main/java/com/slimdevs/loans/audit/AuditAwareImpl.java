@@ -8,6 +8,11 @@ import org.springframework.stereotype.Component;
 @Component("auditAwareImpl")
 public class AuditAwareImpl implements AuditorAware<String> {
 
+    /**
+     * Returns the current app's auditor.
+     * 
+     * @return the current auditor.
+     */
     @Override
     public Optional<String> getCurrentAuditor() {
         
