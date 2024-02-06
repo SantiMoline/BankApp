@@ -1,6 +1,5 @@
 package com.slimdevs.loans.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -73,11 +72,6 @@ public class LoanServiceImpl implements ILoanService  {
         newLoan.setAmountPaid(0);
         newLoan.setOutstandingAmount(LoanConstants.NEW_LOAN_LIMIT);
 
-        //Agregados para realizar pruebas iniciales en los endpoint. Luego se configurará la parte de auditoría y autocompletado.
-        newLoan.setCreatedAt(LocalDateTime.now());
-        newLoan.setCreatedBy("Santi");
         return newLoan;
     }
-
-
 }
