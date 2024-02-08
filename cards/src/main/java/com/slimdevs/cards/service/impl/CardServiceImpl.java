@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.slimdevs.cards.constants.CardConstants;
 import com.slimdevs.cards.dto.CardDto;
 import com.slimdevs.cards.entity.Card;
+import com.slimdevs.cards.exception.CardAlreadyExistsException;
 import com.slimdevs.cards.exception.ResourceNotFoundException;
 import com.slimdevs.cards.mapper.CardMapper;
 import com.slimdevs.cards.repository.CardRepository;
@@ -26,7 +27,7 @@ public class CardServiceImpl implements ICardService {
 
         Optional<Card> optionalCard = cardRepository.findByMobileNumber(mobileNumber);
         if (optionalCard.isPresent()) {
-            //THROW CARD ALREADY EXISTS EXCEPTION.
+            throw new CardAlreadyExistsException("There's already a card registered with the given mobile number: " + mobileNumber);
         }
         cardRepository.save(createNewCard(mobileNumber));
     }
