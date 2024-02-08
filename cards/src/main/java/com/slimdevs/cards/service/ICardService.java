@@ -22,4 +22,11 @@ public interface ICardService {
      * @return boolean indicating if the card's details were successfully updated or not.
      */
     boolean updateCard(CardDto cardDto);
+
+    /**
+     * 
+     * @param mobileNumber - Input mobileNumber
+     * @return boolean indicating if the card's details were successfully deleted or not.
+     */
+    boolean deleteCard(String mobileNumber);    
 }

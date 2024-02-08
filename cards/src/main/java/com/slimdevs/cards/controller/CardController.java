@@ -3,6 +3,7 @@ package com.slimdevs.cards.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,6 +52,21 @@ public class CardController {
             return ResponseEntity
                 .status(HttpStatus.EXPECTATION_FAILED)
                 .body(new ResponseDto(CardConstants.STATUS_417, CardConstants.MESSAGE_417_UPDATE));
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<ResponseDto> deleteCardDetails(@RequestParam String mobileNumber) {
+        boolean isDeleted = iCardService.deleteCard(mobileNumber);
+
+        if(isDeleted) {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDto(CardConstants.STATUS_200, CardConstants.MESSAGE_200));
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.EXPECTATION_FAILED)
+                .body(new ResponseDto(CardConstants.STATUS_417, CardConstants.MESSAGE_417_DELETE));
         }
     }
 }
