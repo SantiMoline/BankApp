@@ -15,13 +15,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.slimdevs.cards.constants.CardConstants;
 import com.slimdevs.cards.dto.CardDto;
+import com.slimdevs.cards.dto.ErrorResponseDto;
 import com.slimdevs.cards.dto.ResponseDto;
 import com.slimdevs.cards.service.ICardService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 
+@Tag(
+    name = "CRUD REST APIs for Cards in BankApp",
+    description = "CRUD REST APIs in BankApp to CREATE, UPDATE, FETCH AND DELETE card's details"
+)
 @RestController
 @RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
@@ -30,6 +41,23 @@ public class CardController {
 
     ICardService iCardService;
     
+    @Operation(
+        summary = "Creates card REST API.",
+        description = "REST API to create a new Card in BankApp."
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "201",
+            description = "HTTP Status CREATED."
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "HTTP Status Internal Server Error.",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+        )
+    })
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createCard(@Valid @RequestParam 
                             @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile Number must be 10 digits.")
@@ -41,6 +69,23 @@ public class CardController {
             .body(new ResponseDto(CardConstants.STATUS_201, CardConstants.MESSAGE_201));
     }
 
+    @Operation(
+        summary = "Fetches card's details REST API.",
+        description = "REST API to fetch a Card's based on a given mobile number."
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status OK."
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "HTTP Status Internal Server Error.",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+        )
+    })
     @GetMapping("/fetch")
     public ResponseEntity<CardDto> fetchCard(@Valid @RequestParam 
                             @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile Number must be 10 digits.")
@@ -50,6 +95,27 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.OK).body(cardDto);
     }
 
+    @Operation(
+        summary = "Updates Card's details REST API.",
+        description = "REST API to update Card's based on a given card number."
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status OK."
+        ),
+        @ApiResponse(
+            responseCode = "417",
+            description = "HTTP Status Expectation Failed."
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "HTTP Status Internal Server Error.",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+        )
+    })
     @PutMapping("/update")
     public ResponseEntity<ResponseDto> updateCardDetails(@Valid @RequestBody CardDto cardDto) {
         boolean isUpdated = iCardService.updateCard(cardDto);
@@ -64,6 +130,27 @@ public class CardController {
         }
     }
 
+    @Operation(
+        summary = "Deletes Card's details REST API.",
+        description = "REST API to delete Card's based on a given mobile number."
+    )
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status OK."
+        ),
+        @ApiResponse(
+            responseCode = "417",
+            description = "HTTP Status Expectation Failed."
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "HTTP Status Internal Server Error.",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+        )
+    })
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteCardDetails(@Valid @RequestParam
                             @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile Number must be 10 digits.")
