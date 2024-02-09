@@ -42,7 +42,9 @@ public class CardController {
     }
 
     @GetMapping("/fetch")
-    public ResponseEntity<CardDto> fetchCard(@Valid @RequestParam String mobileNumber) {
+    public ResponseEntity<CardDto> fetchCard(@Valid @RequestParam 
+                            @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile Number must be 10 digits.")
+                            String mobileNumber) {
         CardDto cardDto = iCardService.fetchCard(mobileNumber);
 
         return ResponseEntity.status(HttpStatus.OK).body(cardDto);
@@ -63,7 +65,9 @@ public class CardController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<ResponseDto> deleteCardDetails(@Valid @RequestParam String mobileNumber) {
+    public ResponseEntity<ResponseDto> deleteCardDetails(@Valid @RequestParam
+                            @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile Number must be 10 digits.")
+                            String mobileNumber) {
         boolean isDeleted = iCardService.deleteCard(mobileNumber);
 
         if(isDeleted) {
